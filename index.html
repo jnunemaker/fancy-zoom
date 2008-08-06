@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>Fancy Zoom Examples</title>
+	<script type="text/javascript" src="js/prototype.js"></script>
+	<script type="text/javascript" src="js/scriptaculous.js"></script>
+	<script type="text/javascript" src="js/fancyzoom.js"></script>
+	
+	<script type="text/javascript" charset="utf-8">
+		$(document).observe('dom:loaded', function() {	
+			$$('a.fancy').each(function(el) { new FancyZoom(el); });
+		});
+	</script>
+	
+	<style type="text/css" media="screen">
+		div.zoom 						{position:absolute; top:50%; left:50%; width:760px; height:413px; margin:-380px 0 0 -207px;}
+		div.description 		{float:left; display:inline; margin:33px 20px 0 33px; width:195px;}
+		div.description h3	{margin:0 0 10px; padding:0;}
+		div.description p		{margin:0 0 20px;}
+		div.movie 					{margin:33px 0 0 0;}
+		a.zoom_close				{position:absolute; top:2px; left:2px;}
+		div#hello p					{margin:40px;}
+	</style>
+</head>
+<body>
+	
+	<a href="#hello" class="fancy">Click me to zoom</a>
+	
+	
+	<div id="hello">
+		<p>Hello World!</p>
+	</div>
+
+</body>
+</html>
