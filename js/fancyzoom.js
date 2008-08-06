@@ -1,10 +1,3 @@
-function benchmark(func) {
-  var st = new Date().getTime();
-  func.call();
-  var et = new Date().getTime();
-  console.log(func + ': ' + (et-st).toString() + 'ms');
-}
-
 Object.extend(String.prototype, {
   // if a string doesn't end with str it appends it
   ensureEndsWith: function(str) {
@@ -47,9 +40,11 @@ Element.addMethods({
 var FancyZoomBox = {
   directory : 'images',
   zooming   : false,
+  setup     : false,
   
   init: function(directory) {
-    if ($('zoom')) { return; }
+    if (FancyZoomBox.setup) return;
+    FancyZoomBox.setup = true;
     // setup all our elements
     var img   = new Element('img', {src:FancyZoomBox.directory + '/closebox.png', alt:'Close'});
     var a     = new Element('a', {href:'#', title:'Close', id:'zoom_close'});
@@ -68,7 +63,7 @@ var FancyZoomBox = {
     var table = new Element('table', {'id':'zoom_table'});
     var zoom  = new Element('div', {'id':'zoom'});
     var body  = $$('body').first();
-
+    
     trow.insertElements(tl, tm, tr);
     mrow.insertElements(ml, mm, mr);
     brow.insertElements(bl, bm, br);
@@ -78,15 +73,15 @@ var FancyZoomBox = {
     body.insert(zoom);
     
     $(table).setStyle('border-collapse:collapse; width:100%; height:100%;');
-    $(tl).setStyle('background:url(' + FancyZoomBox.directory + '/tl.png) no-repeat; width:20px height:20px; overflow:hidden;');
-    $(tm).setStyle('background:url(' + FancyZoomBox.directory + '/tm.png) repeat-x; height:20px; overflow:hidden;');
-    $(tr).setStyle('background:url(' + FancyZoomBox.directory + '/tr.png) no-repeat; width:20px height:20px; overflow:hidden;');
-    $(ml).setStyle('background:url(' + FancyZoomBox.directory + '/ml.png) repeat-y; width:20px; overflow:hidden;');
+    $(tl).setStyle('background:url(' + FancyZoomBox.directory + '/tl.png) 0 0 no-repeat; width:20px height:20px; overflow:hidden;');
+    $(tm).setStyle('background:url(' + FancyZoomBox.directory + '/tm.png) 0 0 repeat-x; height:20px; overflow:hidden;');
+    $(tr).setStyle('background:url(' + FancyZoomBox.directory + '/tr.png) 100% 0 no-repeat; width:20px height:20px; overflow:hidden;');
+    $(ml).setStyle('background:url(' + FancyZoomBox.directory + '/ml.png) 0 0 repeat-y; width:20px; overflow:hidden;');
     $(mm).setStyle('background:#fff; vertical-align:top; padding:10px;');
-    $(mr).setStyle('background:url(' + FancyZoomBox.directory + '/mr.png) repeat-y;  width:20px; overflow:hidden;');
+    $(mr).setStyle('background:url(' + FancyZoomBox.directory + '/mr.png) 100% 0 repeat-y;  width:20px; overflow:hidden;');
     $(bl).setStyle('background:url(' + FancyZoomBox.directory + '/bl.png) 0 100% no-repeat; width:20px height:20px; overflow:hidden;');
-    $(bm).setStyle('background:url(' + FancyZoomBox.directory + '/bm.png) repeat-x; height:20px; overflow:hidden;');
-    $(br).setStyle('background:url(' + FancyZoomBox.directory + '/br.png) no-repeat; width:20px height:20px; overflow:hidden;');
+    $(bm).setStyle('background:url(' + FancyZoomBox.directory + '/bm.png) 0 100% repeat-x; height:20px; overflow:hidden;');
+    $(br).setStyle('background:url(' + FancyZoomBox.directory + '/br.png) 100% 100% no-repeat; width:20px height:20px; overflow:hidden;');
     $(img).setStyle('border:none; margin:0; padding:0;');
     $(a).setStyle('position:absolute; top:0; left:0;');
     
