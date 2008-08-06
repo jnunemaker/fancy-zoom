@@ -88,28 +88,31 @@ var FancyZoomBox = {
     $(bm).setStyle('background:url(' + FancyZoomBox.directory + '/bm.png) repeat-x; height:20px; overflow:hidden;');
     $(br).setStyle('background:url(' + FancyZoomBox.directory + '/br.png) no-repeat; width:20px height:20px; overflow:hidden;');
     $(img).setStyle('border:none; margin:0; padding:0;');
-    $(a).setStyle('position:absolute; top:0; left:0;').observe('click', FancyZoomBox.out);
+    $(a).setStyle('position:absolute; top:0; left:0;');
     
     FancyZoomBox.zoom = zoom;
     FancyZoomBox.zoom_close = a;
     FancyZoomBox.zoom_content_area = mm;
+    
+    FancyZoomBox.zoom_close.observe('click', FancyZoomBox.hide);
   },
   
-  in: function(e) {
+  show: function(e) {
     e.stop();
 		if (FancyZoomBox.zooming) return;
 		FancyZoomBox.zooming   = true;
 		var element            = e.element();
 		var related_div        = element.content_div;
-		var width              = related_div.getWidth();
-		var height             = related_div.getHeight();		
+		var width              = element.zoom_width || related_div.getWidth();
+		var height             = element.zoom_height || related_div.getHeight();		
 		var d                  = Window.size();
 		var yOffset            = document.viewport.getScrollOffsets()[1];
-		var newTop             = (d.height/2) - (height/2) + yOffset;
+		// ensure that newTop is at least 0 so it doesn't hide close button
+		var newTop             = Math.max((d.height/2) - (height/2) + yOffset, 0);
 		var newLeft            = (d.width/2) - (width/2);
 		FancyZoomBox.curOffset = element.cumulativeOffset();
-		FancyZoomBox.curTop    = e ? e.pointerY() : FancyZoomBox.curOffset.top;
-		FancyZoomBox.curLeft   = e ? e.pointerX() : FancyZoomBox.curOffset.left;
+		FancyZoomBox.curTop    = e.pointerY();
+		FancyZoomBox.curLeft   = e.pointerX();
 		FancyZoomBox.moveX     = -(FancyZoomBox.curLeft - newLeft);
 		FancyZoomBox.moveY     = -(FancyZoomBox.curTop - newTop);
     FancyZoomBox.zoom.hide().setStyle({
@@ -146,7 +149,7 @@ var FancyZoomBox = {
 		], { duration: 0.3 });
   },
   
-  out: function(e) {
+  hide: function(e) {
     e.stop();
 		if (FancyZoomBox.zooming) return;
 		FancyZoomBox.zooming = true;		
@@ -193,7 +196,9 @@ var FancyZoom = Class.create({
 		if (this.element && this.zoom) {
 		  this.element.content_div = $(this.element.readAttribute('href').gsub(/^#/, ''));
   		this.element.content_div.hide();
-      this.element.observe('click', FancyZoomBox.in);
+  		this.element.zoom_width = this.options.width;
+  		this.element.zoom_height = this.options.height;
+      this.element.observe('click', FancyZoomBox.show);
 		}
 	}
 });

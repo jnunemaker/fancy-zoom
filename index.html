@@ -12,9 +12,9 @@
 	
 	<script type="text/javascript" charset="utf-8">
 		$(document).observe('dom:loaded', function() {
-			$w('small medium large').each(function(el) {
-				new FancyZoom(el);
-			});
+			new FancyZoom('small');
+			new FancyZoom('medium');
+			new FancyZoom('large', {width:600, height:400});
 		});
 	</script>
 	
@@ -23,22 +23,22 @@
 		p {margin:0; padding:0;}
 		#small_box 		{width:150px; height:100px;}
 		#medium_box 	{width:300px; height:200px;}
-		#large_box 		{width:600px; height:400px;}
+		#large_box 		{/*width:100px; height:100px;*/}
 	</style>
 </head>
 <body>
 	
-	<a href="#small_box" id="small">Click me to zoom a small window</a>
+	<p><a href="#small_box" id="small">Click me to zoom a small window</a></p>
 	<div id="small_box">
 		<p>Hello World!</p>
 	</div>
 	
-	<a href="#medium_box" id="medium">Click me to zoom a small window</a>
+	<p><a href="#medium_box" id="medium">Click me to zoom a medium window</a></p>
 	<div id="medium_box">
 		<p>Hello World!</p>
 	</div>
 	
-	<a href="#large_box" id="large">Click me to zoom a small window</a>
+	<p><a href="#large_box" id="large">Click me to zoom a large window</a></p>
 	<div id="large_box">
 		<p>Hello World!</p>
 	</div>
