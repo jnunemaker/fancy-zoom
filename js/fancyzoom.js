@@ -45,51 +45,45 @@ var FancyZoomBox = {
   init: function(directory) {
     if (FancyZoomBox.setup) return;
     FancyZoomBox.setup = true;
-    // setup all our elements
-    var img   = new Element('img', {src:FancyZoomBox.directory + '/closebox.png', alt:'Close'});
-    var a     = new Element('a', {href:'#', title:'Close', id:'zoom_close'});
-    var tl    = new Element('td', {'class':'tl'});
-    var tm    = new Element('td', {'class':'tm'});
-    var tr    = new Element('td', {'class':'tr'});
-    var ml    = new Element('td', {'class':'ml'});
-    var mm    = new Element('td', {'class':'mm', 'id':'zoom_content_area'});
-    var mr    = new Element('td', {'class':'mr'});
-    var bl    = new Element('td', {'class':'bl'});
-    var bm    = new Element('td', {'class':'bm'});
-    var br    = new Element('td', {'class':'br'});
-    var trow  = new Element('tr');
-    var mrow  = new Element('tr');
-    var brow  = new Element('tr');
-    var table = new Element('table', {'id':'zoom_table'});
-    var zoom  = new Element('div', {'id':'zoom'});
+    
+    var html = '<div id="zoom" style="display:none;"> \
+                  <table id="zoom_table" style="border-collapse:collapse; width:100%; height:100%;"> \
+                    <tbody> \
+                      <tr> \
+                        <td class="tl" style="background:url(' + FancyZoomBox.directory + '/tl.png) 0 0 no-repeat; width:20px height:20px; overflow:hidden;" /> \
+                        <td class="tm" style="background:url(' + FancyZoomBox.directory + '/tm.png) 0 0 repeat-x; height:20px; overflow:hidden;" /> \
+                        <td class="tr" style="background:url(' + FancyZoomBox.directory + '/tr.png) 100% 0 no-repeat; width:20px height:20px; overflow:hidden;" /> \
+                      </tr> \
+                      <tr> \
+                        <td class="ml" style="background:url(' + FancyZoomBox.directory + '/ml.png) 0 0 repeat-y; width:20px; overflow:hidden;" /> \
+                        <td class="mm" style="background:#fff; vertical-align:top; padding:10px;"> \
+                          <div id="zoom_content"> \
+                          </div> \
+                        </td> \
+                        <td class="mr" style="background:url(' + FancyZoomBox.directory + '/mr.png) 100% 0 repeat-y;  width:20px; overflow:hidden;" /> \
+                      </tr> \
+                      <tr> \
+                        <td class="bl" style="background:url(' + FancyZoomBox.directory + '/bl.png) 0 100% no-repeat; width:20px height:20px; overflow:hidden;" /> \
+                        <td class="bm" style="background:url(' + FancyZoomBox.directory + '/bm.png) 0 100% repeat-x; height:20px; overflow:hidden;" /> \
+                        <td class="br" style="background:url(' + FancyZoomBox.directory + '/br.png) 100% 100% no-repeat; width:20px height:20px; overflow:hidden;" /> \
+                      </tr> \
+                    </tbody> \
+                  </table> \
+                  <a href="#" title="Close" id="zoom_close" style="position:absolute; top:0; left:0;"> \
+                    <img src="' + FancyZoomBox.directory + '/closebox.png" alt="Close" style="border:none; margin:0; padding:0;" /> \
+                  </a> \
+                </div>';
+    
     var body  = $$('body').first();
+    body.insert(html);
     
-    trow.insertElements(tl, tm, tr);
-    mrow.insertElements(ml, mm, mr);
-    brow.insertElements(bl, bm, br);
-    table.insertElements(trow, mrow, brow);
-  	a.insert(img);
-  	zoom.insertElements(table, a);
-    body.insert(zoom);
-    
-    $(table).setStyle('border-collapse:collapse; width:100%; height:100%;');
-    $(tl).setStyle('background:url(' + FancyZoomBox.directory + '/tl.png) 0 0 no-repeat; width:20px height:20px; overflow:hidden;');
-    $(tm).setStyle('background:url(' + FancyZoomBox.directory + '/tm.png) 0 0 repeat-x; height:20px; overflow:hidden;');
-    $(tr).setStyle('background:url(' + FancyZoomBox.directory + '/tr.png) 100% 0 no-repeat; width:20px height:20px; overflow:hidden;');
-    $(ml).setStyle('background:url(' + FancyZoomBox.directory + '/ml.png) 0 0 repeat-y; width:20px; overflow:hidden;');
-    $(mm).setStyle('background:#fff; vertical-align:top; padding:10px;');
-    $(mr).setStyle('background:url(' + FancyZoomBox.directory + '/mr.png) 100% 0 repeat-y;  width:20px; overflow:hidden;');
-    $(bl).setStyle('background:url(' + FancyZoomBox.directory + '/bl.png) 0 100% no-repeat; width:20px height:20px; overflow:hidden;');
-    $(bm).setStyle('background:url(' + FancyZoomBox.directory + '/bm.png) 0 100% repeat-x; height:20px; overflow:hidden;');
-    $(br).setStyle('background:url(' + FancyZoomBox.directory + '/br.png) 100% 100% no-repeat; width:20px height:20px; overflow:hidden;');
-    $(img).setStyle('border:none; margin:0; padding:0;');
-    $(a).setStyle('position:absolute; top:0; left:0;');
-    
-    FancyZoomBox.zoom = zoom;
-    FancyZoomBox.zoom_close = a;
-    FancyZoomBox.zoom_content_area = mm;
-    
+    FancyZoomBox.zoom = $('zoom');
+    FancyZoomBox.zoom_table = $('zoom_table');
+    FancyZoomBox.zoom_close = $('zoom_close');
+    FancyZoomBox.zoom_content = $('zoom_content');
     FancyZoomBox.zoom_close.observe('click', FancyZoomBox.hide);
+    FancyZoomBox.middle_row = $A([$$('td.ml'), $$('td.mm'), $$('td.mr')]).flatten();
+    FancyZoomBox.cells = FancyZoomBox.zoom_table.select('td');
   },
   
   show: function(e) {
@@ -115,9 +109,9 @@ var FancyZoomBox = {
 			top					: FancyZoomBox.curTop.px(),
 			left				: FancyZoomBox.curLeft.px()
 		});
-    FancyZoomBox.zoom_content_area.innerHTML = related_div.innerHTML;
+    FancyZoomBox.zoom_content.innerHTML = related_div.innerHTML;
 		
-		new Effect.Parallel([			
+		new Effect.Parallel([
 			new Effect.Appear(FancyZoomBox.zoom, {sync:true}),
 			new Effect.Move(FancyZoomBox.zoom, {x: FancyZoomBox.moveX, y: FancyZoomBox.moveY, sync: true}),
 			new Effect.Scale(FancyZoomBox.zoom, 100, {
@@ -125,14 +119,18 @@ var FancyZoomBox = {
 				scaleContent	: false,
 				sync					: true,
 				beforeStart: function(effect) {
+				  // middle row height must be set for IE otherwise it tries to be "logical" with the height
+    		  if (Prototype.Browser.IE) {
+    		    FancyZoomBox.middle_row.invoke('setStyle', {height:(height-40).px()});
+    		  }
 					$(effect.element).setStyle({
 						width   : width.px(),
 						height  : height.px()
 					});
-					FancyZoomBox.addBgColorIfIE();
+					FancyZoomBox.fixBackgroundsForIE();
 				},
 				afterFinish: function(effect) {
-					FancyZoomBox.removeBgColorIfIE();
+					FancyZoomBox.unfixBackgroundsForIE();
 					FancyZoomBox.zoom.show().setStyle({
 						width   : width.px(),
 						height  : height.px()
@@ -155,11 +153,11 @@ var FancyZoomBox = {
 				scaleContent	: false,
 				sync					: true,
 				beforeStart: function(effect) {
-					FancyZoomBox.addBgColorIfIE();
+					FancyZoomBox.fixBackgroundsForIE();
 					FancyZoomBox.zoom_close.hide();
 				},
 				afterFinish: function(effect) {
-					FancyZoomBox.removeBgColorIfIE();
+					FancyZoomBox.unfixBackgroundsForIE();
 					FancyZoomBox.zooming = false;
 				}
 			}),
@@ -168,12 +166,20 @@ var FancyZoomBox = {
   },
   
   // prevents the thick black border that happens when appearing or fading png in IE
-	addBgColorIfIE: function() {
-    // if (Prototype.Browser.IE) this.zoom.setStyle({ background: '#fff ' + this.bg });
+	fixBackgroundsForIE: function() {
+    if (Prototype.Browser.IE) {
+      FancyZoomBox.cells.each(function(td) {
+        td.setStyle('background-color:#fff');
+      });
+    }
 	},
 	
-	removeBgColorIfIE: function() {
-    // if (Prototype.Browser.IE) this.zoom.setStyle({ background: this.bg });
+	unfixBackgroundsForIE: function() {
+    if (Prototype.Browser.IE) {
+      FancyZoomBox.cells.each(function(td) {
+        td.setStyle('background-color:none');
+      });
+    }
 	}
 }
 
@@ -181,14 +187,8 @@ var FancyZoom = Class.create({
 	initialize: function(element) {
 	  this.options = arguments.length > 1 ? arguments[1] : {};
 	  FancyZoomBox.init();
-	  
-	  this.zoom          = $('zoom');
-    this.zoom_table    = $('zoom_table');
-	  
-    this.zoom.hide();
 	  this.element = $(element);
-		this.zooming  = false;
-		if (this.element && this.zoom) {
+		if (this.element) {
 		  this.element.content_div = $(this.element.readAttribute('href').gsub(/^#/, ''));
   		this.element.content_div.hide();
   		this.element.zoom_width = this.options.width;
