@@ -46,6 +46,13 @@ var FancyZoomBox = {
     if (FancyZoomBox.setup) return;
     FancyZoomBox.setup = true;
     
+    var ie = navigator.userAgent.match(/MSIE\s(\d)+/);
+    if (ie) {
+      var version = parseInt(ie[1]);
+      Prototype.Browser['IE' + version.toString()] = true;
+      Prototype.Browser.ltIE7 = (version < 7) ? true : false;
+    }
+    
     var html = '<div id="zoom" style="display:none;"> \
                   <table id="zoom_table" style="border-collapse:collapse; width:100%; height:100%;"> \
                     <tbody> \
@@ -84,6 +91,11 @@ var FancyZoomBox = {
     FancyZoomBox.zoom_close.observe('click', FancyZoomBox.hide);
     FancyZoomBox.middle_row = $A([$$('td.ml'), $$('td.mm'), $$('td.mr')]).flatten();
     FancyZoomBox.cells = FancyZoomBox.zoom_table.select('td');
+    
+    // just use gifs as ie6 and below suck
+    if (Prototype.Browser.ltIE7) {
+      FancyZoomBox.switchBackgroundImagesTo('gif');
+    }    
   },
   
   show: function(e) {
@@ -165,21 +177,27 @@ var FancyZoomBox = {
 		], { duration: 0.5 });
   },
   
+  // switches the backgrounds of the cells and the close image to png's or gif's
+  // fixes ie's issues with fading and appearing transparent png's with 
+  // no background and ie6's craptacular handling of transparent png's
+  switchBackgroundImagesTo: function(to) {
+    FancyZoomBox.cells.each(function(td) {
+      var bg = td.getStyle('background-image').gsub(/\.(png|gif|none)\)$/, '.' + to + ')');
+      td.setStyle('background-image: ' + bg);
+    });
+    var close_img = FancyZoomBox.zoom_close.firstDescendant();
+    var new_img = close_img.readAttribute('src').gsub(/\.(png|gif|none)$/, '.' + to);
+    close_img.writeAttribute('src', new_img);
+  },
+  
   // prevents the thick black border that happens when appearing or fading png in IE
 	fixBackgroundsForIE: function() {
-    if (Prototype.Browser.IE) {
-      FancyZoomBox.cells.each(function(td) {
-        td.setStyle('background-color:#fff');
-      });
-    }
+    if (Prototype.Browser.IE7) { FancyZoomBox.switchBackgroundImagesTo('gif'); }
 	},
 	
+	// swaps back to png's for prettier shadows
 	unfixBackgroundsForIE: function() {
-    if (Prototype.Browser.IE) {
-      FancyZoomBox.cells.each(function(td) {
-        td.setStyle('background-color:none');
-      });
-    }
+    if (Prototype.Browser.IE7) { FancyZoomBox.switchBackgroundImagesTo('png'); }
 	}
 }
 
