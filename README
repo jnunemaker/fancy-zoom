@@ -3,24 +3,35 @@
 	<script type="text/javascript" src="js/scriptaculous.js"></script> 
 	<script type="text/javascript" src="js/fancyzoom.js"></script> 
 
-2. Start zooming.
-	<script type="text/javascript"> 
-		$(document).observe('dom:loaded', function() {
-			$$('a.fancy').each(function(el) { new FancyZoom(el); });
+2. Start zooming.	
+	new FancyZoom(id) where id is the id of the <a> tag you would like to zoom. The <a> tag should have an  href that anchors to the id of the box that contains the contents that should be zoomed. For example:
+	
+		<a href="#small_box" id="small">Small Box!</a>
+		<div id="small_box">
+			<p>Here is the contents that will appear in the zoom.</p>
+		</div>
+		<script type="text/javascript">
 			new FancyZoom('small');
-			new FancyZoom('medium');
-			// width and height are optional. defaults to css specifications of width and height. 
-			// if width and height are passed in, they override whatever may be in css.
-			new FancyZoom('large', {width:600, height:400});
-		});
-	</script>
+		</script>
 	
-	new FancyZoom(id) where id is the id of the <a> tag you would like to zoom. The <a> tag should have an href that anchors to the id of the box that contains the contents that should be zoomed. For example:
+		// other examples
+		<script type="text/javascript"> 
+			$(document).observe('dom:loaded', function() {
+				$$('a.fancy').each(function(el) { new FancyZoom(el, {width:500, height:300}); });
+				new FancyZoom('small');
+				new FancyZoom('medium');
+				// width and height are optional. defaults to css specifications of width and height. 
+				// if width and height are passed in, they override whatever may be in css.
+				new FancyZoom('large', {width:600, height:400});
+			});
+		</script>
 	
-	<a href="#small_box" id="small">Small Box!</a>
-	<div id="small_box">
-		<p>Here is the contents that will appear in the zoom.</p>
-	</div>
-	<script type="text/javascript">
-		new FancyZoom('small');
-	</script>
+	If the images are not in a directory named 'images' that is relative to the html file you can configure it like so:
+		
+		<script type="text/javascript">
+			FancyZoomBox.directory = 'http://foobar.com/images/zoom'; // no need for trailing slash
+			$(document).observe('dom:loaded', function() {
+				new FancyZoom('small');
+			});
+		</script>
+	

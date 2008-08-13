@@ -102,7 +102,7 @@ var FancyZoomBox = {
     e.stop();
 		if (FancyZoomBox.zooming) return;
 		FancyZoomBox.zooming   = true;
-		var element            = e.element();
+		var element            = e.findElement('a');
 		var related_div        = element.content_div;
 		var width              = (element.zoom_width || related_div.getWidth()) + 30;
 		var height             = (element.zoom_height || related_div.getHeight()) + 10;		
