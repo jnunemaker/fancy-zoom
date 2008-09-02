@@ -25,7 +25,7 @@
 <div id="wrapper"> 
 	<div id="header"> 
 		<h1>Fancy Zoom</h1> 
-		<p>Prototype based version of Fancy Zoom by Cabel Sasser.</p> 
+		<p>Zoomy JavaScript based loosely on Fancy Zoom by Cabel Sasser.</p> 
 		
 		<ul id="nav"> 
 			<li><a href="http://github.com/jnunemaker/fancy-zoom/">Github</a></li> 
@@ -36,8 +36,10 @@
 	<div id="content">
 		<p>This works with any html (images, text, headings, flash). The only caveat is it doesn't currently work with AJAX. Whatever you want to zoom to must be html already on the page. Below are several examples. Width and height of zoom box are configurable through optional setting or css.</p>
 		
+		<h2>Demos</h2>
+		
 		<div id="photos">
-			<h2>Images</h2>
+			<h3>Images</h3>
 			<div class="photo">
 				<a href="#github">
 					<img src="http://farm4.static.flickr.com/3250/2765022017_356efe6a25_s.jpg" alt="Github helmet" />
@@ -67,7 +69,7 @@
 		</div>
 		
 		<div id="text">
-			<h2>Text</h2>
+			<h3>Text</h3>
 			<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Vivamus vitae risus vitae lorem iaculis placerat. Aliquam sit amet felis. Etiam congue. Donec risus risus, pretium ac, tincidunt eu, tempor eu, quam. Morbi blandit mollis magna. Suspendisse eu tortor. <a href="#medium_box" id="medium_box_link">Here is a medium box</a> blandit rhoncus. Ut a pede ac neque mattis facilisis. Nulla nunc ipsum, sodales vitae, hendrerit non, imperdiet ac, ante. <a href="#large_box" id="large_box_link">Here is a large box</a>. Morbi sit amet mi. Ut magna. Curabitur id est. Nulla velit. Sed consectetuer sodales justo. Aliquam dictum gravida libero. Sed eu turpis. Nunc id lorem. Aenean consequat tempor mi. Phasellus in neque. Nunc fermentum convallis ligula. <a href="#flash_box" id ="flash_box_link">You can even embed flash</a>.</p>
 			
 			<div id="medium_box">
@@ -88,12 +90,53 @@
 				<object type="application/x-shockwave-flash" width="400" height="300" data="http://www.flickr.com/apps/video/stewart.swf?v=59154" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"> <param name="flashvars" value="intl_lang=en-us&amp;photo_secret=1869930911&amp;photo_id=2756538377"></param> <param name="movie" value="http://www.flickr.com/apps/video/stewart.swf?v=59154"></param> <param name="bgcolor" value="#000000"></param> <param name="allowFullScreen" value="true"></param><embed type="application/x-shockwave-flash" src="http://www.flickr.com/apps/video/stewart.swf?v=59154" bgcolor="#000000" allowfullscreen="true" flashvars="intl_lang=en-us&amp;photo_secret=1869930911&amp;photo_id=2756538377" height="300" width="400"></embed></object>
 			</div>
 		</div>
+		
+		<h2>Installation</h2>
+		
+		<p>Add the following scripts and checkout the notes below (or view the source of this page).</p>
+		
+<pre><code>&lt;script type="text/javascript" src="js/prototype.js"&gt;&lt;/script&gt; 
+&lt;script type="text/javascript" src="js/scriptaculous.js"&gt;&lt;/script&gt; 
+&lt;script type="text/javascript" src="js/fancyzoom.js"&gt;&lt;/script&gt;</code></pre>
+		
+		<h2>Notes</h2>
+		<p>new FancyZoom(id) where id is the id of the <a> tag you would like to zoom. The <a> tag should have an  href that anchors to the id of the box that contains the contents that should be zoomed. For example:</p>
+
+			<pre><code>&lt;a href="#small_box" id="small"&gt;Small Box!&lt;/a&gt;
+&lt;div id="small_box"&gt;
+  &lt;p&gt;Here is the contents that will appear in the zoom.&lt;/p&gt;
+&lt;/div&gt;
+&lt;script type="text/javascript"&gt;
+	new FancyZoom('small');
+&lt;/script&gt;
+
+// other examples
+&lt;script type="text/javascript"&gt; 
+  $(document).observe('dom:loaded', function() {
+    $$('a.fancy').each(function(el) { new FancyZoom(el, {width:500, height:300}); });
+    new FancyZoom('small');
+    new FancyZoom('medium');
+    // width and height are optional. defaults to css specifications of width and height. 
+    // if width and height are passed in, they override whatever may be in css.
+    new FancyZoom('large', {width:600, height:400});
+  });
+&lt;/script&gt;</code></pre>
+
+		<p>If the images are not in a directory named 'images' that is relative to the html file you can configure it like so:</p>
+
+<pre><code>&lt;script type="text/javascript"&gt;
+  FancyZoomBox.directory = 'http://foobar.com/images/zoom'; // no need for trailing slash
+  $(document).observe('dom:loaded', function() {
+    new FancyZoom('small');
+  });
+&lt;/script&gt;</code></pre>
+		
 	</div> 
  
 	<div id="footer"> 
 		<p>
-			Created by <a href="http://addictedtonew.com/about/">John Nunemaker</a> |
-			<a href="http://orderedlist.com/">Hire me at OrderedList</a>
+			Created by <a href="http://addictedtonew.com/about/">John Nunemaker</a> of <a href="http://orderedlist.com/">Ordered List</a> |
+			<a href="http://orderedlist.com/contact/">Hire me</a>
 		</p> 
 	</div> 
 </div>
