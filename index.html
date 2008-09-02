@@ -1,48 +1,101 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	<title>Fancy Zoom Examples</title>
-	<link rel="stylesheet" href="css/fancyzoom.css" type="text/css" media="screen" />
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
+<head> 
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
+	<title>Fancy Zoom by John Nunemaker</title> 
+	<link rel="stylesheet" href="css/common.css" type="text/css" /> 
 	<script type="text/javascript" src="js/prototype.js"></script>
 	<script type="text/javascript" src="js/scriptaculous.js"></script>
 	<script type="text/javascript" src="js/fancyzoom.js"></script>
 	
 	<script type="text/javascript" charset="utf-8">
 		$(document).observe('dom:loaded', function() {
-			new FancyZoom('small');
-			new FancyZoom('medium');
-			new FancyZoom('large', {width:600, height:400});
+			$$("div.photo a").each(function(el) { new FancyZoom(el); })
+			new FancyZoom('medium_box_link', {width:400, height:300});
+			new FancyZoom('large_box_link');
+			new FancyZoom('flash_box_link');
 		});
 	</script>
 	
 	<style type="text/css" media="screen">
-		body {font-family:Helvetica, Arial, sans-serif; background:#ccc;}
-		p {margin:0; padding:0;}
-		#small_box 		{width:150px; height:100px;}
-		#medium_box 	{width:300px; height:200px;}
-		#large_box 		{/*width:100px; height:100px;*/}
+		#large_box {width:800; height:600;}
 	</style>
-</head>
-<body>
+</head> 
+<body> 
+<div id="wrapper"> 
+	<div id="header"> 
+		<h1>Fancy Zoom</h1> 
+		<p>Prototype based version of Fancy Zoom by Cabel Sasser.</p> 
+		
+		<ul id="nav"> 
+			<li><a href="http://github.com/jnunemaker/fancy-zoom/">Github</a></li> 
+			<li><a href="http://jnunemaker.lighthouseapp.com/projects/16389-fancyzoom/overview">Lighthouse</a></li> 
+		</ul> 
+	</div> 
 	
-	<p><a href="#small_box" id="small">Click me to zoom a small window</a></p>
-	<p><a href="#medium_box" id="medium">Click me to zoom a medium window</a></p>
-	<p><a href="#large_box" id="large">Click me to zoom a large window</a></p>
-	
-	<div id="small_box">
-		<p>Hello World from small box!</p>
-	</div>
-	
-	<div id="medium_box">
-		<p>Hello World from medium box!</p>
-	</div>
-	
-	<div id="large_box">
-		<p>Hello World from large box!</p>
-	</div>
-	
-</body>
+	<div id="content">
+		<p>This works with any html (images, text, headings, flash). The only caveat is it doesn't currently work with AJAX. Whatever you want to zoom to must be html already on the page. Below are several examples. Width and height of zoom box are configurable through optional setting or css.</p>
+		
+		<div id="photos">
+			<h2>Images</h2>
+			<div class="photo">
+				<a href="#github">
+					<img src="http://farm4.static.flickr.com/3250/2765022017_356efe6a25_s.jpg" alt="Github helmet" />
+				</a>
+			</div>
+			<div class="photo">
+				<a href="#hotdog">
+					<img src="http://farm4.static.flickr.com/3150/2726282580_05ed83e3c0_s.jpg" alt="Github helmet" />
+				</a>
+			</div>
+			<div class="photo">
+				<a href="#turtles">
+					<img src="http://farm4.static.flickr.com/3088/2709825025_fb6d71b455_s.jpg" alt="Github helmet" />
+				</a>
+			</div>
+
+			<div id="github">
+				<img src="http://farm4.static.flickr.com/3250/2765022017_356efe6a25.jpg" alt="helmet" />
+			</div>
+			<div id="hotdog">
+				<img src="http://farm4.static.flickr.com/3150/2726282580_05ed83e3c0.jpg" alt="Hot dog" />
+			</div>
+			<div id="turtles">
+				<img src="http://farm4.static.flickr.com/3088/2709825025_fb6d71b455.jpg" alt="Turtles" />
+				<p id="turtles_caption">It's true, they do bite!</p>
+			</div>
+		</div>
+		
+		<div id="text">
+			<h2>Text</h2>
+			<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Vivamus vitae risus vitae lorem iaculis placerat. Aliquam sit amet felis. Etiam congue. Donec risus risus, pretium ac, tincidunt eu, tempor eu, quam. Morbi blandit mollis magna. Suspendisse eu tortor. <a href="#medium_box" id="medium_box_link">Here is a medium box</a> blandit rhoncus. Ut a pede ac neque mattis facilisis. Nulla nunc ipsum, sodales vitae, hendrerit non, imperdiet ac, ante. <a href="#large_box" id="large_box_link">Here is a large box</a>. Morbi sit amet mi. Ut magna. Curabitur id est. Nulla velit. Sed consectetuer sodales justo. Aliquam dictum gravida libero. Sed eu turpis. Nunc id lorem. Aenean consequat tempor mi. Phasellus in neque. Nunc fermentum convallis ligula. <a href="#flash_box" id ="flash_box_link">You can even embed flash</a>.</p>
+			
+			<div id="medium_box">
+				<h2>Here is a medium box</h2>
+				<p><strong>The width and height of this box are set in the options for this fancy zoom.</strong> Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Vivamus vitae risus vitae lorem iaculis placerat. Aliquam sit amet felis. Etiam congue. Donec risus risus, pretium ac, tincidunt eu, tempor eu, quam. Morbi blandit mollis magna. Suspendisse eu tortor. Donec vitae felis nec ligula blandit rhoncus.</p>
+				
+				<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Vivamus vitae risus vitae lorem iaculis placerat. Aliquam sit amet felis. Etiam congue. Donec risus risus, pretium ac, tincidunt eu, tempor eu, quam. Morbi blandit mollis magna. Suspendisse eu tortor. Donec vitae felis nec ligula blandit rhoncus.</p>
+			</div>
+			
+			<div id="large_box">
+				<h2>Here is a large box</h2>
+				<p><strong>The width and height for this box are inferred from css. See the style tag in the &lt;head&gt; of this document.</strong> Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Vivamus vitae risus vitae lorem iaculis placerat. Aliquam sit amet felis. Etiam congue. Donec risus risus, pretium ac, tincidunt eu, tempor eu, quam. Morbi blandit mollis magna. Suspendisse eu tortor. Donec vitae felis nec ligula blandit rhoncus.</p>
+				
+				<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Vivamus vitae risus vitae lorem iaculis placerat. Aliquam sit amet felis. Etiam congue. Donec risus risus, pretium ac, tincidunt eu, tempor eu, quam. Morbi blandit mollis magna. Suspendisse eu tortor. Donec vitae felis nec ligula blandit rhoncus.</p>
+			</div>
+			
+			<div id="flash_box">
+				<object type="application/x-shockwave-flash" width="400" height="300" data="http://www.flickr.com/apps/video/stewart.swf?v=59154" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"> <param name="flashvars" value="intl_lang=en-us&amp;photo_secret=1869930911&amp;photo_id=2756538377"></param> <param name="movie" value="http://www.flickr.com/apps/video/stewart.swf?v=59154"></param> <param name="bgcolor" value="#000000"></param> <param name="allowFullScreen" value="true"></param><embed type="application/x-shockwave-flash" src="http://www.flickr.com/apps/video/stewart.swf?v=59154" bgcolor="#000000" allowfullscreen="true" flashvars="intl_lang=en-us&amp;photo_secret=1869930911&amp;photo_id=2756538377" height="300" width="400"></embed></object>
+			</div>
+		</div>
+	</div> 
+ 
+	<div id="footer"> 
+		<p>
+			Created by <a href="http://addictedtonew.com/about/">John Nunemaker</a> |
+			<a href="http://orderedlist.com/">Hire me at OrderedList</a>
+		</p> 
+	</div> 
+</div>
+</body> 
 </html>

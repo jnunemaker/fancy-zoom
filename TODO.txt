@@ -1,0 +1,3 @@
+* use ajax to load content if not using anchor link
+* move zoom box on window resize
+* maybe allow draggable? with a setting
