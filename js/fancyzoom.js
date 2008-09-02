@@ -111,47 +111,40 @@ var FancyZoomBox = {
 		// ensure that newTop is at least 0 so it doesn't hide close button
 		var newTop             = Math.max((d.height/2) - (height/2) + yOffset, 0);
 		var newLeft            = (d.width/2) - (width/2);
-		FancyZoomBox.curOffset = element.cumulativeOffset();
 		FancyZoomBox.curTop    = e.pointerY();
 		FancyZoomBox.curLeft   = e.pointerX();
 		FancyZoomBox.moveX     = -(FancyZoomBox.curLeft - newLeft);
 		FancyZoomBox.moveY     = -(FancyZoomBox.curTop - newTop);
     FancyZoomBox.zoom.hide().setStyle({
-			position		: 'absolute',
-			top					: FancyZoomBox.curTop.px(),
-			left				: FancyZoomBox.curLeft.px()
+			position	: 'absolute',
+			top				: FancyZoomBox.curTop.px(),
+			left			: FancyZoomBox.curLeft.px()
 		});
-    FancyZoomBox.zoom_content.innerHTML = related_div.innerHTML;
-		
+    
 		new Effect.Parallel([
 			new Effect.Appear(FancyZoomBox.zoom, {sync:true}),
 			new Effect.Move(FancyZoomBox.zoom, {x: FancyZoomBox.moveX, y: FancyZoomBox.moveY, sync: true}),
-			new Effect.Scale(FancyZoomBox.zoom, 100, {
-				scaleFrom			: 0,
-				scaleContent	: false,
-				sync					: true,
+			new Effect.Morph(FancyZoomBox.zoom, {
+			  style: {
+			    width: width.px(),
+			    height: height.px()
+			  },
+				sync: true,
 				beforeStart: function(effect) {
 				  // middle row height must be set for IE otherwise it tries to be "logical" with the height
     		  if (Prototype.Browser.IE) {
     		    FancyZoomBox.middle_row.invoke('setStyle', {height:(height-40).px()});
     		  }
-					$(effect.element).setStyle({
-						width   : width.px(),
-						height  : height.px()
-					});
 					FancyZoomBox.fixBackgroundsForIE();
 				},
 				afterFinish: function(effect) {
+				  FancyZoomBox.zoom_content.innerHTML = related_div.innerHTML;
 					FancyZoomBox.unfixBackgroundsForIE();
-					FancyZoomBox.zoom.show().setStyle({
-						width   : width.px(),
-						height  : height.px()
-					});
 					FancyZoomBox.zoom_close.show();
 					FancyZoomBox.zooming = false;
 				}
 			})
-		], { duration: 0.3 });
+		], { duration: 0.5 });
   },
   
   hide: function(e) {
@@ -160,12 +153,15 @@ var FancyZoomBox = {
 		FancyZoomBox.zooming = true;		
 		new Effect.Parallel([
 			new Effect.Move(FancyZoomBox.zoom, {x: FancyZoomBox.moveX*-1, y: FancyZoomBox.moveY*-1, sync: true}),
-			new Effect.Scale(FancyZoomBox.zoom, 0, {
-				scaleFrom			: 100,
-				scaleContent	: false,
+			new Effect.Morph(FancyZoomBox.zoom, {
+			  style: {
+			    width: '1'.px(),
+			    height: '1'.px()
+			  },
 				sync					: true,
 				beforeStart: function(effect) {
 					FancyZoomBox.fixBackgroundsForIE();
+					FancyZoomBox.zoom_content.innerHTML = '';
 					FancyZoomBox.zoom_close.hide();
 				},
 				afterFinish: function(effect) {
