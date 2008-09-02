@@ -28,15 +28,6 @@ var Window = {
 	}
 }
 
-Element.addMethods({
-  insertElements: function(element) {
-    var elements = (arguments.length == 2) ? arguments[1] : $A(arguments).slice(1, arguments.length);
-    element = $(element);
-    $A(elements).flatten().each(function(el) { element.insert(el); });
-    return element;
-  }
-});
-
 var FancyZoomBox = {
   directory : 'images',
   zooming   : false,
