@@ -202,3 +202,10 @@ var FancyZoom = Class.create({
 		}
 	}
 });
+
+// hide zoom if click fired is not inside zoom
+$$('html').first().observe('click', function(e) {
+  if (typeof(e.findElement('div#zoom')) == 'undefined') {
+    FancyZoomBox.hide(e);
+  }
+});
