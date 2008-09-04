@@ -37,7 +37,10 @@ jQuery.fn.fancyZoom = function(options){
     $('body').append(html);
     
     $('html').click(function(e){if($(e.target).parents('#zoom:visible').length == 0) hide();});
-
+    $(document).keyup(function(event){
+        if (event.keyCode == 27 && $('#zoom:visible').length > 0) hide();
+    });
+    
     $('#zoom_close').click(hide);
   }
   
