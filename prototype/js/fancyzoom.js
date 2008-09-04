@@ -83,6 +83,23 @@ var FancyZoomBox = {
     FancyZoomBox.middle_row = $A([$$('td.ml'), $$('td.mm'), $$('td.mr')]).flatten();
     FancyZoomBox.cells = FancyZoomBox.zoom_table.select('td');
     
+    // hide zoom if click fired is not inside zoom
+    $$('html').first().observe('click', function(e) {
+      var click_in_zoom = e.findElement('#zoom'),
+          zoom_display  = FancyZoomBox.zoom.getStyle('display');
+      if (zoom_display == 'block' && !click_in_zoom) {
+        FancyZoomBox.hide(e);
+      }
+    });
+
+    // esc to close zoom box
+    $(document).observe('keyup', function(e) {
+      var zoom_display = FancyZoomBox.zoom.getStyle('display');
+      if (e.keyCode == Event.KEY_ESC && zoom_display == 'block') {
+        FancyZoomBox.hide(e);
+      }
+    });
+    
     // just use gifs as ie6 and below suck
     if (Prototype.Browser.ltIE7) {
       FancyZoomBox.switchBackgroundImagesTo('gif');
@@ -201,11 +218,4 @@ var FancyZoom = Class.create({
       this.element.observe('click', FancyZoomBox.show);
 		}
 	}
-});
-
-// hide zoom if click fired is not inside zoom
-$$('html').first().observe('click', function(e) {
-  if (typeof(e.findElement('div#zoom')) == 'undefined') {
-    FancyZoomBox.hide(e);
-  }
 });
