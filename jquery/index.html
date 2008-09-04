@@ -8,7 +8,7 @@
 	<script type="text/javascript" src="js/fancyzoom.js"></script>
 	<script type="text/javascript" charset="utf-8">
 		$(document).ready(function() {
-			$('div.photo a').fancyZoom({scaleImg: true});
+			$('div.photo a').fancyZoom({scaleImg: true, closeOnClick: true});
 			$('#medium_box_link').fancyZoom({width:400, height:300});
 			$('#large_box_link').fancyZoom();
 			$('#flash_box_link').fancyZoom();
@@ -113,7 +113,7 @@
   $(document).ready(function() {
     $('a.fancy').each(function() { $(this).fancyZoom({width:500, height:300});});
     $('#small').fancyZoom({scaleImg: true}); // Scales images inside while zooming
-    $('#medium').fancyZoom();
+    $('#medium').fancyZoom({closeOnClick: true}); // Close the zoom by clicking on the contents
     // width and height are optional. defaults to css specifications of width and height. 
     // if width and height are passed in, they override whatever may be in css.
     $('#large').fancyZoom({width:600, height:400});

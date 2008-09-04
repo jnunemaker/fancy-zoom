@@ -35,6 +35,8 @@ jQuery.fn.fancyZoom = function(options){
                 </div>';
                 
     $('body').append(html);
+    
+    $('html').click(function(e){if($(e.target).parents('#zoom:visible').length == 0) hide();});
 
     $('#zoom_close').click(hide);
   }
@@ -89,6 +91,11 @@ jQuery.fn.fancyZoom = function(options){
     
     fixBackgroundsForIE();
     zoom_close.hide();
+    
+    if (options.closeOnClick) {
+      $('#zoom').click(hide);
+    }
+    
 		if (options.scaleImg) {
   		zoom_content.html(content_div.html());
   		$('#zoom_content img').css('width', '100%');
@@ -116,6 +123,7 @@ jQuery.fn.fancyZoom = function(options){
   function hide() {
     if (zooming) return false;
 		zooming         = true;
+	  $('#zoom').unbind('click');
 		fixBackgroundsForIE();
 		if (zoom_close.attr('scaleImg') != 'true') {
   		zoom_content.html('');
@@ -133,7 +141,7 @@ jQuery.fn.fancyZoom = function(options){
   		}
       unfixBackgroundsForIE();
 			zooming = false;
-    })
+    });
     return false;
   }
   
