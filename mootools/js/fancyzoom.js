@@ -21,7 +21,7 @@ var FancyZoom = new Class({
     }
   },
   setup: function() {
-    var ext = (Browser.Engine.trident && !Browser.Engine.trident5) ? 'gif' : 'png'
+    var ext = Browser.Engine.trident ? 'gif' : 'png'
     var html = '<table id="zoom_table" style="border-collapse:collapse; width:100%; height:100%;"> \
                  <tbody> \
                    <tr> \
@@ -47,7 +47,7 @@ var FancyZoom = new Class({
                <a href="#" title="Close" id="zoom_close" style="position:absolute; top:0; left:0;"> \
                  <img src="' + this.options.directory + '/closebox.'+ext+'" alt="Close" style="border:none; margin:0; padding:0;" /> \
                </a>';
-    document.body.grab(new Element('div', {id:"zoom", style:"display:none", html: html}));
+    $(document.body).grab(new Element('div', {id:"zoom", style:"display:none", html: html}));
     //Setup the FX as class methods
     FancyZoom.showFx = new Fx.Morph($('zoom'), {
       duration: 500,
@@ -67,6 +67,7 @@ var FancyZoom = new Class({
         if (!element.retrieve('scaleImg'))
           $('zoom_content').set('html', element.retrieve('content_div').get('html'));
         $('zoom_close').setStyle('display', '');
+        FancyZoom.unfixBackgroundsForIE();
       }
     })
     FancyZoom.hideFx = new Fx.Morph($('zoom'), {
@@ -77,15 +78,15 @@ var FancyZoom = new Class({
         $('zoom_close').setStyle('display', 'none');
       },
       onComplete: function(element) {
-        element.setStyle('display', 'none')
+        element.setStyle('display', 'none');
+        FancyZoom.unfixBackgroundsForIE();
       }
     })
     //Attach the events only once
     $('zoom_close').addEvent('click', FancyZoom.hide);
     // hide zoom if click fired is not inside zoom
     $$('html')[0].addEvent('click', function(e) {
-      var click_in_zoom = e.target.match('#zoom') ? e.target : e.target.getParent('#zoom');
-      if (!click_in_zoom)
+      if (!($(e.target).match('#zoom') || $(e.target).getParent('#zoom')))
         FancyZoom.hide(e);
     });
     // esc to close zoom box
@@ -97,7 +98,7 @@ var FancyZoom = new Class({
 });
 FancyZoom.show = function(e) {
   e.stop();
-  var element            = e.target.match('a') ? e.target : e.target.getParent('a');
+  var element            = $(e.target).match('a') ? e.target : e.target.getParent('a');
   var content_div        = element.retrieve('content_div')
   var width              = (element.retrieve('zoom_width') || content_div.getWidth()) + 60;
   var height             = (element.retrieve('zoom_height') || content_div.getHeight()) + 60;
@@ -120,7 +121,7 @@ FancyZoom.show = function(e) {
     width     : 1,
     height    : 1
   });
-  
+  FancyZoom.fixBackgroundsForIE();
   FancyZoom.showFx.start({
     opacity: 1,
     top: newTop,
@@ -130,10 +131,30 @@ FancyZoom.show = function(e) {
 }
 FancyZoom.hide = function(e) {
   e.stop();
+  FancyZoom.fixBackgroundsForIE();
   FancyZoom.hideFx.start({
     left: $('zoom').retrieve('curLeft'), 
     top: $('zoom').retrieve('curTop'),
     width: 1,
     height: 1,
     opacity: 0});
+}
+FancyZoom.switchBackgroundImagesTo = function(to) {
+  $$('#zoom_table td').each(function(e) {
+    var bg = e.getStyle('background-image').replace(/\.(png|gif|none)\)$/, '.'+to+')');
+    e.setStyle('background-image', bg);
+  });
+  var close_img = zoom_close.getElement('img');
+  var new_img = close_img.get('src').replace(/\.(png|gif|none)$/, '.' + to);
+  close_img.set('src', new_img);
+}
+FancyZoom.fixBackgroundsForIE = function() {
+  if (Browser.Engine.trident5) {
+    FancyZoom.switchBackgroundImagesTo('gif'); 
+  }
+}
+FancyZoom.unfixBackgroundsForIE = function() {
+  if (Browser.Engine.trident5) {
+    FancyZoom.switchBackgroundImagesTo('png'); 
+  }
 }
