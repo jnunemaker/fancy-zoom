@@ -64,6 +64,7 @@ var FancyZoom = new Class({
         }
       },
       onComplete: function(element) {
+        FancyZoom.zoomed = true;
         if (!element.retrieve('scaleImg'))
           $('zoom_content').set('html', element.retrieve('content_div').get('html'));
         $('zoom_close').setStyle('display', '');
@@ -78,6 +79,7 @@ var FancyZoom = new Class({
         $('zoom_close').setStyle('display', 'none');
       },
       onComplete: function(element) {
+        FancyZoom.zoomed = false;
         element.setStyle('display', 'none');
         FancyZoom.unfixBackgroundsForIE();
       }
@@ -96,6 +98,7 @@ var FancyZoom = new Class({
     });
   }
 });
+FancyZoom.zoomed = false;
 FancyZoom.show = function(e) {
   e.stop();
   var element            = $(e.target).match('a') ? e.target : e.target.getParent('a');
@@ -130,6 +133,8 @@ FancyZoom.show = function(e) {
     height: height})
 }
 FancyZoom.hide = function(e) {
+  if(!FancyZoom.zoomed)
+    return
   e.stop();
   FancyZoom.fixBackgroundsForIE();
   FancyZoom.hideFx.start({
