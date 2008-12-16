@@ -2,13 +2,34 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
 <head> 
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
-  <title>Fancy Zoom by John Nunemaker</title> 
+  <title>Fancy Zoom by Chris Van Pelt &amp; John Nunemaker</title> 
   <link rel="stylesheet" href="../css/common.css" type="text/css" /> 
-  <script type="text/javascript" src="js/mootools.1.2.js"></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/mootools/1.2.1/mootools-yui-compressed.js"></script>
   <script type="text/javascript" src="js/fancyzoom.js"></script>
   <script type="text/javascript" charset="utf-8">
     document.addEvent('domready', function() {
-      $$("div.photo a").each(function(el) { new FancyZoom(el, {scaleImg:true}); })
+      $$("div.photo a").each(function(el) { 
+        new FancyZoom(el, {
+          scaleImg:true,
+          onShow: function(e) {
+            var fancy = this
+            var a = fancy.content_div.getElement('a')
+            if(a && a.getElement('.loading')) {
+              var loaded = function() {
+                fancy.loaded = true
+                fancy.options.width = this.width
+                fancy.options.height = this.height
+                a.empty().adopt(this)
+                FancyZoom.show(e)
+              }
+              var image = new Image()
+              image.onload = loaded
+              image.src = a.href
+            }
+          },
+          max: 480
+        })
+      })
       new FancyZoom('medium_box_link', {width:400, height:300});
       new FancyZoom('large_box_link');
       new FancyZoom('flash_box_link');
@@ -47,20 +68,24 @@
       </div>
       <div class="photo">
         <a href="#hotdog">
-          <img src="http://farm4.static.flickr.com/3150/2726282580_05ed83e3c0_s.jpg" alt="Github helmet" />
+          <img src="http://farm4.static.flickr.com/3150/2726282580_05ed83e3c0_s.jpg" alt="Hotdog" />
         </a>
       </div>
       <div class="photo">
         <a href="#turtles">
-          <img src="http://farm4.static.flickr.com/3088/2709825025_fb6d71b455_s.jpg" alt="Github helmet" />
+          <img src="http://farm4.static.flickr.com/3088/2709825025_fb6d71b455_s.jpg" alt="Turtles" />
         </a>
       </div>
-
+     
       <div id="github">
-        <img src="http://farm4.static.flickr.com/3250/2765022017_356efe6a25.jpg" alt="helmet" />
+        <a href="http://farm4.static.flickr.com/3250/2765022017_356efe6a25.jpg#helmet">
+          <img src="./images/loading.gif" alt="loading" class="loading" />
+        </a>
       </div>
       <div id="hotdog">
-        <img src="http://farm4.static.flickr.com/3150/2726282580_05ed83e3c0.jpg" alt="Hot dog" />
+        <a href="http://farm4.static.flickr.com/3150/2726282580_05ed83e3c0.jpg#hotdog">
+          <img src="./images/loading.gif" alt="loading" class="loading" />
+        </a>
       </div>
       <div id="turtles">
         <img src="http://farm4.static.flickr.com/3088/2709825025_fb6d71b455.jpg" alt="Turtles" />
@@ -101,7 +126,7 @@
     
     <p>Add the following scripts and checkout the notes below (or view the source of this page).</p>
     
-<pre><code>&lt;script type="text/javascript" src="js/mootools.1.2.js"&gt;&lt;/script&gt; 
+<pre><code>&lt;script "http://ajax.googleapis.com/ajax/libs/mootools/1.2.1/mootools-yui-compressed.js"&gt;&lt;/script&gt; 
 &lt;script type="text/javascript" src="js/fancyzoom.js"&gt;&lt;/script&gt;</code></pre>
     
     <h2>Notes</h2>
@@ -117,13 +142,44 @@
 
 // other examples
 &lt;script type="text/javascript"&gt; 
-  $(document).observe('dom:loaded', function() {
+  window.addEvent('domready', function() {
     $$('a.fancy').each(function(el) { new FancyZoom(el, {width:500, height:300}); });
+    
     new FancyZoom('small', {scaleImg: true}); // Scales images inside while zooming
+    
     new FancyZoom('medium');
+    
     // width and height are optional. defaults to css specifications of width and height. 
     // if width and height are passed in, they override whatever may be in css.
     new FancyZoom('large', {width:600, height:400});
+    
+    /* This is an example of loading the image dynamically once the zoom is initiated.
+     * This particular example assumes that you have a link inside of your content div
+     * which contains an element (a spinning gif loader) with the class loading.  eg:
+     *  &lt;a href="#"&gt;&lt;img src="/images/loading.gif" alt="loading" class="loading"/&gt;&lt;/a&gt;
+     * The first two images above are loaded this way
+     */
+     new FancyZoom('custom', {
+       scaleImg: true,
+       onShow: function(e) {
+         var fancy = this
+         var a = fancy.content_div.getElement('a')
+         if(a.getElement('.loading')) {
+           var loaded = function() {
+             fancy.loaded = true
+             fancy.options.width = this.width
+             fancy.options.height = this.height
+             a.empty().adopt(this)
+             FancyZoom.show(e)
+           }
+           var image = new Image()
+           image.onload = loaded
+           image.src = a.href
+         }
+       },
+       //Make the images no wider than 480
+       max:480
+     })
   });
 &lt;/script&gt;</code></pre>
 
@@ -138,8 +194,8 @@
  
   <div id="footer">
     <p>
-      Created by <a href="http://addictedtonew.com/about/">John Nunemaker</a> of <a href="http://orderedlist.com/">Ordered List</a> |
-      <a href="http://orderedlist.com/contact/">Hire me</a>
+      Created by <a href="http://vandev.com">Chris Van Pelt</a> of <a href="http://doloreslabs.com/">Dolores Labs</a> | original implementation by 
+      <a href="http://orderedlist.com/contact/">John Nunemaker</a>
     </p> 
   </div> 
 </div>
